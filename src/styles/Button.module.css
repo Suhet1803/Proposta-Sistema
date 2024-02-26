@@ -4,7 +4,7 @@
   padding: 15px 30px;
   border-radius: 12px;
 
-  background-color: #3498db;
+  background-color: #0000b2;
 
   text-align: center;
   text-decoration: none;
@@ -15,7 +15,7 @@
 }
 
 .button:hover {
-  background-color: #2980b9;
+  background-color: #3498db;
 }
 
 .tooltip {
@@ -46,3 +46,4 @@
   visibility: visible;
   opacity: 1;
 }
+

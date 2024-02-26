@@ -1,5 +1,6 @@
 'use client';
 
+import { Calculator, Equal, X } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useCallback, useMemo, useRef, useState } from 'react';
@@ -27,6 +28,10 @@ export const Editor = ({ document, toUpdate, setDocumentsHistory }) => {
   const editor = useRef(null);
 
   const titleRef = useRef('');
+  const calculatorValueOne = useRef(null);
+  const calculatorValueTwo = useRef(null);
+  const calculatorValueThree = useRef(null);
+  const calculatorProfile = useRef(null);
 
   const [data, setData] = useState(document ?? {
     id: uuid(),
@@ -34,6 +39,12 @@ export const Editor = ({ document, toUpdate, setDocumentsHistory }) => {
     content: '',
     created_at: new Date(),
     updated_at: new Date(),
+    calculator: {
+      valueOne: calculatorValueOne.current?.value ?? null,
+      valueTwo: calculatorValueTwo.current?.value ?? null,
+      operator: '*', // Multiplicator
+      result: null
+    }
   });
 
   const handleUpdateDocument = useCallback(() => {
@@ -69,6 +80,7 @@ export const Editor = ({ document, toUpdate, setDocumentsHistory }) => {
           title: data.title,
           content: data.content,
           documentId: document.id,
+          calculator: data.calculator,
           updated_at: new Date(),
           created_at: new Date(),
         };
@@ -113,6 +125,9 @@ export const Editor = ({ document, toUpdate, setDocumentsHistory }) => {
     }
 
     titleRef.current.value = '';
+    calculatorProfile.current.value = '';
+    calculatorValueOne.current.value = '';
+    calculatorValueTwo.current.value = '';
 
     setData({
       id: uuid(),
@@ -156,6 +171,42 @@ export const Editor = ({ document, toUpdate, setDocumentsHistory }) => {
     }
   }, [router]);
 
+  const calcular = () => {
+    if (!calculatorValueOne.current?.value) {
+      return toast.error('Adicione o valor hora para calcular');
+    }
+
+    if (!calculatorValueTwo.current?.value) {
+      return toast.error('Adicione a quantidade para calcular');
+    }
+
+    if (!calculatorValueThree.current?.value) {
+      return toast.error('Adicione a quantidade de meses para calcular');
+    }
+
+    if (!calculatorProfile.current?.value) {
+      return toast.error('Adicione o perfil para calcular');
+    }
+
+    const result = calculatorValueOne.current?.value * calculatorValueTwo.current?.value * calculatorValueThree.current?.value;
+
+    setData(prev => {
+      return {
+        ...prev,
+        calculator: {
+          ...prev.calculator,
+          valueOne: calculatorValueOne.current.value,
+          valueTwo: calculatorValueTwo.current.value,
+          profile: calculatorProfile.current.value,
+          operator: '*', // Multiplicator
+          result
+        }
+      }
+    });
+
+    toast.success('Valor calculado. Agora é só salvar a proposta para atualizar.')
+  };
+
   return (
     <div className='flex flex-col gap-4'>
       <input
@@ -173,6 +224,72 @@ export const Editor = ({ document, toUpdate, setDocumentsHistory }) => {
           })
         }}
       />
+
+      <div className="flex flex-col my-2 gap-2 items-start">
+        <span className="font-bold text-lg">Dados da Página 14 - Calculadora</span>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="calculatorProfile" className='flex flex-col gap-0.5 max-w-sm'>
+            <input
+              type="text"
+              id="calculatorProfile"
+              placeholder="Digite o perfil"
+              ref={calculatorProfile}
+              defaultValue={data?.calculator?.profile}
+              className='px-4 py-2 rounded-md text-black outline-0 focus:border-green-500 border-transparent border-2'
+            />
+          </label>
+          <div className="flex gap-2 items-end">
+            <label htmlFor="valorX" className='flex flex-col gap-0.5'>
+              <input
+                type="number"
+                id="valorX"
+                placeholder="Valor Hora"
+                ref={calculatorValueOne}
+                defaultValue={data?.calculator?.valueOne}
+                className='px-4 py-2 rounded-md text-black outline-0 focus:border-green-500 border-transparent border-2'
+              />
+            </label>
+            <span className="">
+              <X />
+            </span>
+            <label htmlFor="valorY" className='flex flex-col gap-0.5'>
+              <input
+                type="number"
+                id="valorY"
+                placeholder="Quantidade"
+                ref={calculatorValueTwo}
+                defaultValue={data?.calculator?.valueTwo}
+                className='px-4 py-2 rounded-md text-black outline-0 focus:border-green-500 border-transparent border-2'
+              />
+            </label>
+            <span className="">
+              <X />
+            </span>
+            <label htmlFor="valorZ" className='flex flex-col gap-0.5'>
+              <input
+                type="number"
+                id="valorZ"
+                placeholder="Meses do Projeto"
+                ref={calculatorValueThree}
+                defaultValue={data?.calculator?.valueThree}
+                className='px-4 py-2 rounded-md text-black outline-0 focus:border-green-500 border-transparent border-2'
+              />
+            </label>
+            <span className="">
+              <Equal />
+            </span>
+            <span className='font-bold text-2xl'>{data?.calculator?.result}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={calcular}
+          className='flex items-center gap-1 bg-green-500 text-white px-8 py-2 rounded-md hover:brightness-110 transition-all'
+        >
+          <Calculator className='w-4 h-4' />
+          Calcular
+        </button>
+      </div>
 
       <JoditEditor
         ref={editor}

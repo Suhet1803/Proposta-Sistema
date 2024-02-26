@@ -197,6 +197,7 @@ export const Editor = ({ document, toUpdate }) => {
             }
           });
         }}
+        
       />
 
       <div className="flex gap-4 items-center">
@@ -223,6 +224,7 @@ export const Editor = ({ document, toUpdate }) => {
               <Trash className='h-4 w-4' />
               Deletar
             </button>
+            
           </>
         )}
       </div>
