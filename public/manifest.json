@@ -1,0 +1,19 @@
+{
+    "id" : "https://sistema-proposta.netlify.app/",
+    "name": "Sistema de Proposta",
+    "short_name": "sistema de proposta",
+    "description": "Sistema de Gerenciamento de Propostas ", 
+    "start_url": "https://sistema-proposta.netlify.app/",   
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#00b3f0",
+    "orientation": "portrait",
+    "scope": ".",
+    
+    "icons": [{
+        "src": "C:/Users/gabri/sistema-proposta/public/logo.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any"
+      }]  
+  }
